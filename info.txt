@@ -4,14 +4,55 @@ The goal is to have some boxes to lay around networks and have them do scans tha
 
 Nodes connect to the web app/mq stack automatically when they have access to receive jobs and to send results. The web app will take on scan options, and use the mq layer to send jobs to nodes.
 
-(Pi[RabbitMQ queue client nmap])-|  		   [Flask Web Application] 	  
-	                             |---Internet--[RabbitMQ Server]
-	                             |-----/ 	
-(Pi[RabbitMQ queue client nmap])-|----/ 
-								 | 	 /									  	
-(Pi[RabbitMQ queue client nmap])-|--/
+(Pi[RabbitMQ queue])-|  		   [Flask Web Application] 	  
+	                 |---Internet--[RabbitMQ Server]
+	                 |     / 	
+(Pi[RabbitMQ queue])-|----/ 
+					 | 	 /		 									  	
+(Pi[RabbitMQ queue])-|--/
 
 The scanning nodes will use Scapy for portscanning, various modules from Impacket, and Requests for Layer 7 checks and use QWebView for web application screenshots. Results will be pushed over rabbitmq sockets over ssl.
 
 https://webscraping.com/blog/Webpage-screenshots-with-webkit/
 https://www.rabbitmq.com/ssl.html
+https://docs.microsoft.com/en-us/azure/sql-database/sql-database-develop-python-simple
+
+Deps:
+
+Nodes:
+
+* rabbitmq
+* pika
+* scapy
+* PyQt4
+* requests
+* impacket
+* pymssql=2.1.1
+
+
+Server:
+
+* rabbitmq
+* pika
+
+
+1) Node is configured to connect to network.
+2) Node boots and connects to the controller.
+3) Log into controller.
+4) Input netmasks (CIDR) and ranges into tagets specification.
+5) Application breaks up ranges into managable chunks of ~250 IP's. 
+6) List of jobs is given to rabbitmq.
+7) Rabbitmq uses round robin to evenly distribute jobs to nodes.
+8) Nodes use Scapy to perfrom TCP SYN scan of IP's.
+9) Nodes use PyQt4 to take screenshots of each discovered web application.
+10) Nodes use Requests to attempt to log in to discovered Tomcat, JBoss, etc.
+11) Nodes use pymssql to attempt to log into discovered mssql with sa and blank.
+12) Nodes use sftp or rabbitmq to push file results to controller.
+13) Nodes pass text results over rabbitmq messages.
+14) Controller receives messages on rabbitmq layer and stores them in a database.
+15) Controller receives binary files, stores them, and stores the path to the files in the database.
+16) The controller web app will report job status.
+17) When scans complete, the web app will generate a report.
+18) Report will show the IP, a list of open ports, text from mssql/jboss, etc. scans, and wen screenshot.
+19) Control to list all IP's with certain ports open.
+20) Default creds view to show applications with sa/blank.
