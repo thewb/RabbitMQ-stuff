@@ -7,7 +7,7 @@ Nodes connect to the web app/mq stack automatically when they have access to rec
 (Pi[RabbitMQ queue client nmap])-|  		   [Flask Web Application] 	  
 	                             |---Internet--[RabbitMQ Server]
 	                             |-----/ 	
-(Pi[RabbitMQ queue client nmap])-|----/ [ssh]
+(Pi[RabbitMQ queue client nmap])-|----/ 
 								 | 	 /									  	
 (Pi[RabbitMQ queue client nmap])-|--/
 
