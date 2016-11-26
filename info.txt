@@ -1,7 +1,8 @@
 What I want to do here is create a queue system with rabbitmq. Each Pi will have a queue, and the flask web app will be able to submit jobs and track status of jobs. Each Pi will be an nmap scanner node. The web app will controll them through an ssh tunnel. 
 
-The goal is to have some boxes to lay around networks and have them do scans that are easily controlled via a web app on a phone. This is so you don't have to leave your laptop on site to complete big nmap scans, and this give the added benefit of multiple nodes to obfuscate port scanning. 
- 
+The goal is to have some boxes to lay around networks and have them do scans that are easily controlled via a web app on a phone. This is so you don't have to leave your laptop on site to complete big nmap scans, and this give the added benefit of multiple nodes to obfuscate port scanning.  
+
+Nodes connect to the web app/mq stack automatically when they have access to receive jobs and to send results. The web app will take on scan options, and use the mq layer to send jobs to nodes.
 
 (Pi[RabbitMQ queue client nmap])-|  		   [Flask Web Application] 	  
 	                             |---Internet--[RabbitMQ Server]
@@ -9,3 +10,8 @@ The goal is to have some boxes to lay around networks and have them do scans tha
 (Pi[RabbitMQ queue client nmap])-|----/ [ssh]
 								 | 	 /									  	
 (Pi[RabbitMQ queue client nmap])-|--/
+
+The scanning nodes will use Scapy for portscanning, various modules from Impacket, and Requests for Layer 7 checks and use QWebView for web application screenshots. Results will be pushed over rabbitmq sockets over ssl.
+
+https://webscraping.com/blog/Webpage-screenshots-with-webkit/
+https://www.rabbitmq.com/ssl.html
